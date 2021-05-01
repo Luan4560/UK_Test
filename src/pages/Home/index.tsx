@@ -1,9 +1,22 @@
-import React, {useEffect, useState} from 'react';
-import {FlatList, ScrollView} from 'react-native';
-import {useNavigation} from '@react-navigation/native'
-import {Search} from '../../components/Search';
+import React, {useState} from 'react';
+import {FlatList, ScrollView, View} from 'react-native';
+import Icon from 'react-native-vector-icons/Fontisto';
+import {useNavigation} from '@react-navigation/native';
+
+import {Spinner} from '../../components/Spinner';
 import api from '../../services/api';
-import {Container, ImageCape, ImageContainer, Title, ContentCape} from './styles';
+
+import {
+  Container,
+  ImageCape,
+  ImageContainer,
+  Title,
+  ContentCape,
+  Input,
+  IconBackground,
+  ContentInput,
+  Header,
+} from './styles';
 
 interface DataTypes {
   show: {
@@ -12,51 +25,79 @@ interface DataTypes {
     image: {
       medium: string;
     };
-  }
+  };
 }
 
 export const Home = () => {
   const navigation = useNavigation();
+  const [isLoading, setIsLoading] = useState(false);
 
   const [show, setShow] = useState<DataTypes[]>([]);
-  useEffect(() => {
-    const getData = async () => {
-      try {
-        const response = await api.get('/dragon');
 
-        setShow(response.data)
-      } catch (err) {
-        console.log(err);
-      }
-    };
+  const onChange = async (query: any) => {
+    try {
+      setIsLoading(true);
+      const response = await api.get(`search/shows/?q=${query}`);
+      const results = response.data;
 
-    getData();
-  }, []);
+      setShow(results);
+    } catch (error) {
+      setShow([]);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  if (isLoading) {
+    return (
+      <View style={{flex: 1, alignContent: 'center', justifyContent: 'center'}}>
+        <Spinner />
+      </View>
+    );
+  }
 
   const _renderItem = ({item}: any) => {
     return (
       <ScrollView>
-        <ContentCape onPress={() => navigation.navigate('Details')}>
+        <ContentCape
+          onPress={() =>
+            navigation.navigate('Details', {
+              itemId: item.show.id,
+            })
+          }>
           <ImageContainer key={item.show.id}>
-            <ImageCape source={{uri: item.show.image.medium}} />
+            <ImageCape
+              source={{
+                uri: item.show.image ? item.show.image.medium : 'no content',
+              }}
+            />
             <Title>{item.show.name}</Title>
           </ImageContainer>
         </ContentCape>
       </ScrollView>
-    )
-  }
+    );
+  };
 
   return (
     <Container>
-      <Search/>
+      <Header>
+        <ContentInput>
+          <Input
+            onChangeText={queryText => onChange(queryText)}
+            placeholder="Type..."
+          />
+          <IconBackground>
+            <Icon name="search" color="#fff" size={20} />
+          </IconBackground>
+        </ContentInput>
+      </Header>
+
       <FlatList
         data={show}
         renderItem={_renderItem}
-        keyExtractor={(item, index) => item.show.id}
+        keyExtractor={item => item.show.id}
         numColumns={2}
       />
     </Container>
   );
 };
-
-

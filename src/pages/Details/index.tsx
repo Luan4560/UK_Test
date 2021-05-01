@@ -1,23 +1,86 @@
-import React from 'react';
-import Icon from 'react-native-vector-icons/Feather'
-import {Container, Header, HeaderContent, TitleHeader, ContentDetails, ContentImage, Thumb, Title} from './styles'
+import React, {useEffect, useState} from 'react';
+import {useNavigation} from '@react-navigation/native';
+import Icon from 'react-native-vector-icons/Feather';
+import {ScrollView} from 'react-native-gesture-handler';
+import {View} from 'react-native';
 
-export const Details = () => {
+import {Spinner} from '../../components/Spinner';
+import api from '../../services/api';
+
+import {
+  Container,
+  Header,
+  HeaderContent,
+  TitleHeader,
+  ContentDetails,
+  ContentImage,
+  Thumb,
+  Title,
+  Description,
+} from './styles';
+
+export const Details = ({route}: any) => {
+  const {itemId} = route.params;
+  const [details, setDetails] = useState([]);
+  const [summary, setSummary] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+
+  const navigation = useNavigation();
+
+  useEffect(() => {
+    const getDetails = async () => {
+      try {
+        setIsLoading(true);
+        const response = await api.get(`shows/${itemId}`);
+
+        const regex = /(<([^>]+)>)/gi;
+        const result = response.data.summary.replace(regex, '');
+
+        setSummary(result);
+        setDetails(response.data);
+      } catch (err) {
+        console.log(err);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    getDetails();
+  }, [itemId]);
+
+  if (isLoading) {
+    return (
+      <View style={{flex: 1, alignContent: 'center', justifyContent: 'center'}}>
+        <Spinner />
+      </View>
+    );
+  }
+
   return (
     <Container>
       <Header>
-        <HeaderContent onPress={() => {}}>
+        <HeaderContent onPress={() => navigation.goBack()}>
           <Icon name="chevron-left" color="#fff" size={35} />
-          <TitleHeader>Batman</TitleHeader>
+          <TitleHeader>{details.name}</TitleHeader>
         </HeaderContent>
       </Header>
 
-        <ContentDetails>
-          <ContentImage>
-            <Thumb source={{uri: 'https://static.tvmaze.com/uploads/images/medium_portrait/6/16463.jpg' }}/>
-          </ContentImage>
-          <Title>BATMAN</Title>
-        </ContentDetails>
+      <ContentDetails>
+        <ContentImage>
+          <Thumb
+            source={{
+              uri: details.image ? details.image.medium : 'no content',
+            }}
+          />
+        </ContentImage>
+
+        <Title>{details.name}</Title>
+        <View style={{height: 150}}>
+          <ScrollView style={{flexGrow: 0.8}}>
+            <Description>{summary}</Description>
+          </ScrollView>
+        </View>
+      </ContentDetails>
     </Container>
-  )
-}
+  );
+};
