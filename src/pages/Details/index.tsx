@@ -6,6 +6,8 @@ import {View} from 'react-native';
 
 import {Spinner} from '../../components/Spinner';
 import api from '../../services/api';
+import {IState} from '../../store';
+import {IListState} from '../../store/modules/list/types';
 
 import {
   Container,
@@ -18,8 +20,12 @@ import {
   Title,
   Description,
 } from './styles';
+import {useSelector} from 'react-redux';
 
 export const Details = ({route}: any) => {
+  const cart = useSelector<IState, IListState[]>(state => state.list);
+  console.log(cart);
+
   const {itemId} = route.params;
   const [details, setDetails] = useState([]);
   const [summary, setSummary] = useState('');
@@ -61,7 +67,7 @@ export const Details = ({route}: any) => {
       <Header>
         <HeaderContent onPress={() => navigation.goBack()}>
           <Icon name="chevron-left" color="#fff" size={35} />
-          <TitleHeader>{details.name}</TitleHeader>
+          <TitleHeader>{details.name || ''}</TitleHeader>
         </HeaderContent>
       </Header>
 

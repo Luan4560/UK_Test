@@ -1,9 +1,11 @@
+/* eslint-disable no-shadow */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, {useState} from 'react';
-import {FlatList, ScrollView, View} from 'react-native';
+import {useDispatch, useSelector} from 'react-redux';
+import {FlatList, ScrollView} from 'react-native';
 import Icon from 'react-native-vector-icons/Fontisto';
 import {useNavigation} from '@react-navigation/native';
 
-import {Spinner} from '../../components/Spinner';
 import api from '../../services/api';
 
 import {
@@ -17,6 +19,8 @@ import {
   ContentInput,
   Header,
 } from './styles';
+import {searchShow} from '../../store/modules/list/actions';
+import {IListItem} from '../../store/modules/list/types';
 
 interface DataTypes {
   show: {
@@ -29,15 +33,19 @@ interface DataTypes {
 }
 
 export const Home = () => {
-  const navigation = useNavigation();
+  const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(false);
-
   const [show, setShow] = useState<DataTypes[]>([]);
+  const navigation = useNavigation();
 
-  const onChange = async (query: any) => {
+  const state = useSelector(state => state);
+
+  const onChange = async (show: any) => {
+    dispatch(searchShow(show));
+
     try {
       setIsLoading(true);
-      const response = await api.get(`search/shows/?q=${query}`);
+      const response = await api.get(`search/shows/?q=${show}`);
       const results = response.data;
 
       setShow(results);
@@ -47,14 +55,6 @@ export const Home = () => {
       setIsLoading(false);
     }
   };
-
-  if (isLoading) {
-    return (
-      <View style={{flex: 1, alignContent: 'center', justifyContent: 'center'}}>
-        <Spinner />
-      </View>
-    );
-  }
 
   const _renderItem = ({item}: any) => {
     return (
@@ -71,7 +71,7 @@ export const Home = () => {
                 uri: item.show.image ? item.show.image.medium : 'no content',
               }}
             />
-            <Title>{item.show.name}</Title>
+            <Title>{item.show.name || ''}</Title>
           </ImageContainer>
         </ContentCape>
       </ScrollView>
@@ -82,10 +82,7 @@ export const Home = () => {
     <Container>
       <Header>
         <ContentInput>
-          <Input
-            onChangeText={queryText => onChange(queryText)}
-            placeholder="Type..."
-          />
+          <Input onChangeText={show => onChange(show)} placeholder="Type..." />
           <IconBackground>
             <Icon name="search" color="#fff" size={20} />
           </IconBackground>
