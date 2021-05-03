@@ -6,8 +6,6 @@ import {View} from 'react-native';
 
 import {Spinner} from '../../components/Spinner';
 import api from '../../services/api';
-import {IState} from '../../store';
-import {IListState} from '../../store/modules/list/types';
 
 import {
   Container,
@@ -22,10 +20,7 @@ import {
 } from './styles';
 import {useSelector} from 'react-redux';
 
-export const Details = ({route}: any) => {
-  const cart = useSelector<IState, IListState[]>(state => state.list);
-  console.log(cart);
-
+export const Details = ({route}) => {
   const {itemId} = route.params;
   const [details, setDetails] = useState([]);
   const [summary, setSummary] = useState('');

@@ -30,7 +30,7 @@ export const Input = styled.TextInput`
   background: #fff;
 `;
 
-export const IconBackground = styled.View`
+export const IconBackground = styled.TouchableOpacity`
   background: #222;
   width: 40px;
   height: 40px;
@@ -63,4 +63,5 @@ export const Title = styled.Text`
 export const ContentCape = styled.TouchableOpacity`
   align-items: center;
   justify-content: center;
+  flex: 1;
 `;

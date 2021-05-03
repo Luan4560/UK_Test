@@ -15,9 +15,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-               BuildableName = "Search.app"
-               BlueprintName = "Search"
-               ReferencedContainer = "container:Search.xcodeproj">
+               BuildableName = "SearchTemplate.app"
+               BlueprintName = "SearchTemplate"
+               ReferencedContainer = "container:SearchTemplate.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -33,9 +33,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "00E356ED1AD99517003FC87E"
-               BuildableName = "SearchTests.xctest"
-               BlueprintName = "SearchTests"
-               ReferencedContainer = "container:Search.xcodeproj">
+               BuildableName = "SearchTemplateTests.xctest"
+               BlueprintName = "SearchTemplateTests"
+               ReferencedContainer = "container:SearchTemplate.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -55,9 +55,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-            BuildableName = "Search.app"
-            BlueprintName = "Search"
-            ReferencedContainer = "container:Search.xcodeproj">
+            BuildableName = "SearchTemplate.app"
+            BlueprintName = "SearchTemplate"
+            ReferencedContainer = "container:SearchTemplate.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </LaunchAction>
@@ -72,9 +72,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-            BuildableName = "Search.app"
-            BlueprintName = "Search"
-            ReferencedContainer = "container:Search.xcodeproj">
+            BuildableName = "SearchTemplate.app"
+            BlueprintName = "SearchTemplate"
+            ReferencedContainer = "container:SearchTemplate.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>
